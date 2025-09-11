@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+int main() {
+    int n, burstTime[20];
+    float totalWait = 0, totalTurnaround = 0;
+    int waitTime = 0;
+
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+    printf("Enter burst times:\n");
+    for (int i = 0; i < n; i++) {
+        printf("P%d: ", i + 1);
+        scanf("%d", &burstTime[i]);
+    }
+
+    printf("\nP\tBurst Time\tWaiting Time\tTurnaround Time\n");
+    for (int i = 0; i < n; i++) {
+        int turnaroundTime = waitTime + burstTime[i];
+        printf("P%d\t%d\t\t%d\t\t%d\n", i + 1, burstTime[i], waitTime, turnaroundTime);
+        totalWait += waitTime;
+        totalTurnaround += turnaroundTime;
+        waitTime += burstTime[i];
+    }
+
+    printf("\nAverage Waiting Time: %.2f\n", totalWait / n);
+    printf("Average Turnaround Time: %.2f\n", totalTurnaround / n);
+    return 0;
+}
