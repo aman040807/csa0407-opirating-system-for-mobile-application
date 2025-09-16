@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char line[200], pattern[50];
+    FILE *fp;
+
+    fp = fopen("test.txt", "r");
+    if (!fp) { perror("File open"); return 1; }
+
+    printf("Enter pattern to search: ");
+    scanf("%s", pattern);
+
+    while (fgets(line, sizeof(line), fp)) {
+        if (strstr(line, pattern))
+            printf("%s", line);
+    }
+    fclose(fp);
+    return 0;
+}
