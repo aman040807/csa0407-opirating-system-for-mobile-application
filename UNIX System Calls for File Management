@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+int main() {
+    int fd;
+    char buffer[50];
+
+    fd = open("test.txt", O_CREAT | O_RDWR, 0777);
+    if (fd < 0) {
+        perror("File creation failed");
+        return 1;
+    }
+    write(fd, "Hello, UNIX system calls!\n", 26);
+
+    lseek(fd, 0, SEEK_SET);
+
+    
+    read(fd, buffer, sizeof(buffer));
+    printf("Data read: %s\n", buffer);
+
+    close(fd);
+    return 0;
+}
