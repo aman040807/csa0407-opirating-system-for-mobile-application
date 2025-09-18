@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    FILE *fp;
+    char data[100];
+
+    // Create and write
+    fp = fopen("test.txt", "w");
+    if (fp == NULL) { printf("File not created!\n"); exit(0); }
+    fprintf(fp, "Hello File Handling in C\n");
+    fclose(fp);
+
+    // Read
+    fp = fopen("test.txt", "r");
+    fgets(data, 100, fp);
+    printf("File content: %s", data);
+    fclose(fp);
+
+    return 0;
+}
