@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+#include <unistd.h>
+
+sem_t wrt;
+pthread_mutex_t mutex;
+int cnt=1, numreader=0;
+
+void *writer(void *wno){
+    sem_wait(&wrt);
+    cnt*=2;
+    printf("Writer %d modified count to %d\n",*(int*)wno,cnt);
+    sem_post(&wrt);
+}
+void *reader(void *rno){
+    pthread_mutex_lock(&mutex);
+    numreader++;
+    if(numreader==1) sem_wait(&wrt);
+    pthread_mutex_unlock(&mutex);
+
+    printf("Reader %d reads count as %d\n",*(int*)rno,cnt);
+
+    pthread_mutex_lock(&mutex);
+    numreader--;
+    if(numreader==0) sem_post(&wrt);
+    pthread_mutex_unlock(&mutex);
+}
+int main(){
+    pthread_t read[5],write[2];
+    sem_init(&wrt,0,1);
+    pthread_mutex_init(&mutex,NULL);
+    int a[5]={1,2,3,4,5},b[2]={1,2};
+
+    for(int i=0;i<5;i++) pthread_create(&read[i],NULL,reader,&a[i]);
+    for(int i=0;i<2;i++) pthread_create(&write[i],NULL,writer,&b[i]);
+
+    for(int i=0;i<5;i++) pthread_join(read[i],NULL);
+    for(int i=0;i<2;i++) pthread_join(write[i],NULL);
+}
